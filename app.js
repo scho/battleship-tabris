@@ -94,14 +94,12 @@ tabris.load(function(){
 
     var name = tabris.create("Text", {
       layoutData: {top: 40, left: [20, 0], right: [20, 0]},
-      message: "Name",
-      text: "scho"
+      message: "Name"
     }).appendTo(page);
 
     var password = tabris.create("Text", {
       layoutData: {top: 80, left: [20, 0], right: [20, 0]},
       type: "password",
-      text: "123",
       message: "Password"
     }).appendTo(page);
 
