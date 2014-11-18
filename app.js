@@ -9,7 +9,22 @@ tabris.load(function(){
       topLevel: false
     });
 
-    var allOpen = function(){
+    var tabFolder = tabris.create("TabFolder", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
+      style: ["TOP"]
+    }).appendTo(page);
+
+    var openGamesTab = tabris.create("Tab", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
+      title: "Open games"
+    }).appendTo(tabFolder);
+
+    var ownGamesTab = tabris.create("Tab", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
+      title: "Own games"
+    }).appendTo(tabFolder);
+
+    var loadAllOpen = function(){
       $.ajax({
         type: 'GET',
         url: apiUrl + '/api/games/allopen',
@@ -34,14 +49,43 @@ tabris.load(function(){
             });
           }
         }).on("selection", function(event) {
-        }).appendTo(page);
-        console.log(games.length + " games loaded.");
+        }).appendTo(openGamesTab);
+        console.log(games.length + " open games loaded.");
       }).fail(function(){
-        console.log("Loading of games failed.");
+        console.log("Loading of open games failed.");
       });
     };
 
-    allOpen();
+    var loadOwn = function(){
+      $.ajax({
+        type: 'GET',
+        url: apiUrl + '/api/games/own',
+        dataType: 'json'
+      }).done(function(games){
+        var openGames = tabris.create("CollectionView", {
+          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+          itemHeight: 72,
+          items: games,
+          initializeCell: function(cell) {
+            var titleLabel = tabris.create("Label", {
+              layoutData: {left: [20, 0], right: [20, 0], top: 15},
+              markupEnabled: true,
+              font: "20px"
+            }).appendTo(cell);
+            cell.on("itemchange", function(ownGame) {
+              titleLabel.set("text", ownGame.playerName + " VS " + ownGame.opponentName);
+            });
+          }
+        }).on("selection", function(event) {
+        }).appendTo(ownGamesTab);
+        console.log(games.length + " own games loaded.");
+      }).fail(function(){
+        console.log("Loading of own games failed.");
+      });
+    };
+
+    loadAllOpen();
+    loadOwn();
 
     return page;
   }
