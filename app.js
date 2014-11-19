@@ -1,94 +1,5 @@
 tabris.load(function(){
-  var apiUrl = "https://battlescho.herokuapp.com",
-    playerId = "";
-
-  function lobbyPage(){
-
-    var page = tabris.create("Page", {
-      title: "Battleship - Lobby",
-      topLevel: false
-    });
-
-    var tabFolder = tabris.create("TabFolder", {
-      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
-      style: ["TOP"]
-    }).appendTo(page);
-
-    var openGamesTab = tabris.create("Tab", {
-      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
-      title: "Open games"
-    }).appendTo(tabFolder);
-
-    var ownGamesTab = tabris.create("Tab", {
-      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
-      title: "Own games"
-    }).appendTo(tabFolder);
-
-    var loadAllOpen = function(){
-      $.ajax({
-        type: 'GET',
-        url: apiUrl + '/api/games/allopen',
-        dataType: 'json'
-      }).done(function(games){
-        var openGames = tabris.create("CollectionView", {
-          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-          itemHeight: 72,
-          items: games,
-          initializeCell: function(cell) {
-            var titleLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: 15},
-              markupEnabled: true,
-              font: "20px"
-            }).appendTo(cell);
-            var authorLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: [titleLabel, 4]},
-              text: "join"
-            }).appendTo(cell);
-            cell.on("itemchange", function(openGame) {
-              titleLabel.set("text", openGame.opponentName);
-            });
-          }
-        }).on("selection", function(event) {
-        }).appendTo(openGamesTab);
-        console.log(games.length + " open games loaded.");
-      }).fail(function(){
-        console.log("Loading of open games failed.");
-      });
-    };
-
-    var loadOwn = function(){
-      $.ajax({
-        type: 'GET',
-        url: apiUrl + '/api/games/own',
-        dataType: 'json'
-      }).done(function(games){
-        var openGames = tabris.create("CollectionView", {
-          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-          itemHeight: 72,
-          items: games,
-          initializeCell: function(cell) {
-            var titleLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: 15},
-              markupEnabled: true,
-              font: "20px"
-            }).appendTo(cell);
-            cell.on("itemchange", function(ownGame) {
-              titleLabel.set("text", ownGame.playerName + " VS " + ownGame.opponentName);
-            });
-          }
-        }).on("selection", function(event) {
-        }).appendTo(ownGamesTab);
-        console.log(games.length + " own games loaded.");
-      }).fail(function(){
-        console.log("Loading of own games failed.");
-      });
-    };
-
-    loadAllOpen();
-    loadOwn();
-
-    return page;
-  }
+  var apiUrl = "https://battlescho.herokuapp.com";
 
   function indexPage(){
 
@@ -170,6 +81,119 @@ tabris.load(function(){
         status.set("text", responseText);
       });
     }).appendTo(page);
+
+    return page;
+  }
+
+  function lobbyPage(){
+
+    var page = tabris.create("Page", {
+      title: "Battleship - Lobby",
+      topLevel: false
+    });
+
+    var tabFolder = tabris.create("TabFolder", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 50},
+      style: ["TOP"]
+    }).appendTo(page);
+
+    tabris.create("Button", {
+      text: "Open Game",
+      layoutData: {left: 50, bottom: 10, right: 50}
+    }).on("selection", function(){
+      console.log("Open new game");
+      $.ajax({
+        type: 'PUT',
+        url: apiUrl + '/api/games/open'
+      }).done(function(gameId){
+        console.log("New game opened: " + gameId);
+        gamePage(gameId).open();
+      });
+    }).appendTo(page);
+
+    var openGamesTab = tabris.create("Tab", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
+      title: "Open games"
+    }).appendTo(tabFolder);
+
+    var ownGamesTab = tabris.create("Tab", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 0},
+      title: "Own games"
+    }).appendTo(tabFolder);
+
+    var loadAllOpen = function(){
+      $.ajax({
+        type: 'GET',
+        url: apiUrl + '/api/games/allopen',
+        dataType: 'json'
+      }).done(function(games){
+        var openGames = tabris.create("CollectionView", {
+          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+          itemHeight: 72,
+          items: games,
+          initializeCell: function(cell) {
+            var titleLabel = tabris.create("Label", {
+              layoutData: {left: [20, 0], right: [20, 0], top: 15},
+              markupEnabled: true,
+              font: "20px"
+            }).appendTo(cell);
+            var authorLabel = tabris.create("Label", {
+              layoutData: {left: [20, 0], right: [20, 0], top: [titleLabel, 4]},
+              text: "join"
+            }).appendTo(cell);
+            cell.on("itemchange", function(openGame) {
+              titleLabel.set("text", openGame.opponentName);
+            });
+          }
+        }).on("selection", function(event) {
+        }).appendTo(openGamesTab);
+        console.log(games.length + " open games loaded.");
+      }).fail(function(){
+        console.log("Loading of open games failed.");
+      });
+    };
+
+    var loadOwn = function(){
+      $.ajax({
+        type: 'GET',
+        url: apiUrl + '/api/games/own',
+        dataType: 'json'
+      }).done(function(games){
+        var openGames = tabris.create("CollectionView", {
+          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+          itemHeight: 72,
+          items: games,
+          initializeCell: function(cell) {
+            var titleLabel = tabris.create("Label", {
+              layoutData: {left: [20, 0], right: [20, 0], top: 15},
+              markupEnabled: true,
+              font: "20px"
+            }).appendTo(cell);
+            cell.on("itemchange", function(ownGame) {
+              titleLabel.set("text", ownGame.opponentName + ' VS ' + (ownGame.playerName ? ownGame.playerName : '?'));
+            });
+          }
+        }).on("selection", function(event) {
+          gamePage(event.item.gameId).open();
+        }).appendTo(ownGamesTab);
+        console.log(games.length + " own games loaded.");
+      }).fail(function(){
+        console.log("Loading of own games failed.");
+      });
+    };
+
+    loadAllOpen();
+    loadOwn();
+
+    return page;
+  }
+
+  function gamePage(gameId){
+
+    var page = tabris.create("Page", {
+      title: "Battleship - Game",
+      topLevel: false
+    });
 
     return page;
   }
