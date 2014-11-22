@@ -13,6 +13,7 @@ tabris.load(function(){
           password: password
         }
       }).done(function(data){
+        localStorage.setItem('playerName', name);
         playerId = data;
         success();
       }).fail(function(j){
@@ -30,6 +31,7 @@ tabris.load(function(){
           password: password
         }
       }).done(function(data){
+        localStorage.setItem('playerName', name);
         playerId = data;
         success();
       }).fail(function(){
@@ -49,7 +51,8 @@ tabris.load(function(){
 
     var name = tabris.create("Text", {
       layoutData: {top: 40, left: [20, 0], right: [20, 0]},
-      message: "Name"
+      message: "Name",
+      text: localStorage.getItem('playerName') || ""
     }).appendTo(page);
 
     var password = tabris.create("Text", {
