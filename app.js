@@ -67,6 +67,7 @@ tabris.load(function(){
     }).on("selection", function() {
       login(name.get("text"), password.get("text"), function () {
         status.set("text", "");
+        page.close();
         lobbyPage().open();
       }, function (responseText) {
         status.set("text", responseText);
