@@ -117,12 +117,12 @@ tabris.load(function(){
 
     var openGamesTab = tabris.create("Tab", {
       layoutData: {left: 0, top: 0, right: 0, bottom: 0},
-      title: "Open games"
+      title: "Open Games"
     }).appendTo(tabFolder);
 
     var ownGamesTab = tabris.create("Tab", {
       layoutData: {left: 0, top: 0, right: 0, bottom: 0},
-      title: "Own games"
+      title: "My Games"
     }).appendTo(tabFolder);
 
     var loadAllOpen = function(){
