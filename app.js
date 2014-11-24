@@ -96,11 +96,6 @@ tabris.load(function(){
       topLevel: false
     });
 
-    var tabFolder = tabris.create("TabFolder", {
-      layoutData: {left: 0, top: 0, right: 0, bottom: 50},
-      style: ["TOP"]
-    }).appendTo(page);
-
     tabris.create("Button", {
       text: "Open Game",
       layoutData: {left: 50, bottom: 10, right: 50}
@@ -113,6 +108,12 @@ tabris.load(function(){
         console.log("New game opened: " + gameId);
         gamePage(gameId).open();
       });
+    }).appendTo(page);
+
+    var tabFolder = tabris.create("TabFolder", {
+      layoutData: {left: 0, top: 0, right: 0, bottom: 50},
+      paging: true,
+      style: ["TOP"]
     }).appendTo(page);
 
     var openGamesTab = tabris.create("Tab", {
