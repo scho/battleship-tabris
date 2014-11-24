@@ -10,6 +10,15 @@
     },
     {
         "src": "app.js"
+    },
+    {
+        "src": "js/index.js"
+    },
+    {
+        "src": "js/lobby.js"
+    },
+    {
+        "src": "js/game.js"
     }
   ]
 }
