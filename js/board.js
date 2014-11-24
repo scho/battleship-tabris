@@ -7,26 +7,23 @@ var Board = function (config) {
   self.startX = 0;
   self.startY = 0;
 
-  self.canvas.on('touchmove', function(event){
-    var newHighlightX = Math.floor(event.touches[0].x / self.tileSize) - 1,
-      newHighlightY = Math.floor(event.touches[0].y / self.tileSize) - 1;
+  var touchChange = function(event){
+    var newHighlightX = Math.floor((event.touches[0].x - self.startX) / self.tileSize),
+      newHighlightY = Math.floor((event.touches[0].y - self.startY) / self.tileSize);
 
     if(newHighlightX !== self.highlightX || newHighlightY !== self.highlightY){
       self.highlightX = newHighlightX;
       self.highlightY = newHighlightY;
       self.draw();
     }
+  };
+
+  self.canvas.on('touchmove', function(event){
+    touchChange(event);
   });
 
   self.canvas.on('touchend', function(event){
-    var newHighlightX = Math.floor(event.touches[0].x / self.tileSize) - 1,
-      newHighlightY = Math.floor(event.touches[0].y / self.tileSize) - 1;
-
-    if(newHighlightX !== self.highlightX || newHighlightY !== self.highlightY){
-      self.highlightX = newHighlightX;
-      self.highlightY = newHighlightY;
-      self.draw();
-    }
+    touchChange(event);
   });
 
   self.canvas.on("change:bounds", function(){
