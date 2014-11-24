@@ -126,40 +126,53 @@ tabris.load(function(){
       title: "My Games"
     }).appendTo(tabFolder);
 
+    var openGames = tabris.create("CollectionView", {
+      layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+      itemHeight: 50,
+      items: [],
+      initializeCell: function(cell) {
+        var titleLabel = tabris.create("Label", {
+          layoutData: {left: [20, 0], right: [20, 0], top: 15, bottom: 0},
+          markupEnabled: true,
+          font: "20px"
+        }).appendTo(cell);
+        var authorLabel = tabris.create("Label", {
+          layoutData: {left: [20, 0], right: [20, 0], top: [titleLabel, 4]},
+          text: "join"
+        }).appendTo(cell);
+        cell.on("itemchange", function(openGame) {
+          titleLabel.set("text", openGame.opponentName);
+        });
+      }
+    }).on("selection", function(event) {      
+      join(event.item);
+    }).appendTo(openGamesTab);
+
+    var ownGames = tabris.create("CollectionView", {
+      layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+      itemHeight: 50,
+      items: [],
+      initializeCell: function(cell) {
+        var titleLabel = tabris.create("Label", {
+          layoutData: {left: [20, 0], right: [20, 0], top: 10},
+          markupEnabled: true,
+          font: "20px"
+        }).appendTo(cell);
+        cell.on("itemchange", function(ownGame) {
+          titleLabel.set("text", ownGame.opponentName + ' VS ' + (ownGame.playerName ? ownGame.playerName : '?'));
+        });
+      }
+    }).on("selection", function(event) {
+      gamePage(event.item.gameId).open();
+    }).appendTo(ownGamesTab);
+
     var loadAllOpen = function(){
       $.ajax({
         type: 'GET',
         url: apiUrl + '/api/games/allopen',
         dataType: 'json'
       }).done(function(games){
-        var openGames = tabris.create("CollectionView", {
-          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-          itemHeight: 72,
-          items: games,
-          initializeCell: function(cell) {
-            var titleLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: 15},
-              markupEnabled: true,
-              font: "20px"
-            }).appendTo(cell);
-            var authorLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: [titleLabel, 4]},
-              text: "join"
-            }).appendTo(cell);
-            cell.on("itemchange", function(openGame) {
-              titleLabel.set("text", openGame.opponentName);
-            });
-          }
-        }).on("selection", function(event) {
-          console.log("Join game " + event.item.gameId);
-          $.ajax({
-            type: 'POST',
-            url: apiUrl + '/api/games/' + event.item.gameId + '/join'
-          }).done(function(gameId){
-            console.log("Game joined " + gameId);
-            gamePage(gameId).open();
-          });
-        }).appendTo(openGamesTab);
+        openGames.set('items', games);
         console.log(games.length + " open games loaded.");
       }).fail(function(){
         console.log("Loading of open games failed.");
@@ -172,26 +185,29 @@ tabris.load(function(){
         url: apiUrl + '/api/games/own',
         dataType: 'json'
       }).done(function(games){
-        var openGames = tabris.create("CollectionView", {
-          layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-          itemHeight: 72,
-          items: games,
-          initializeCell: function(cell) {
-            var titleLabel = tabris.create("Label", {
-              layoutData: {left: [20, 0], right: [20, 0], top: 15},
-              markupEnabled: true,
-              font: "20px"
-            }).appendTo(cell);
-            cell.on("itemchange", function(ownGame) {
-              titleLabel.set("text", ownGame.opponentName + ' VS ' + (ownGame.playerName ? ownGame.playerName : '?'));
-            });
-          }
-        }).on("selection", function(event) {
-          gamePage(event.item.gameId).open();
-        }).appendTo(ownGamesTab);
+        ownGames.set('items', games);
         console.log(games.length + " own games loaded.");
       }).fail(function(){
         console.log("Loading of own games failed.");
+      });
+    };
+
+    var join = function(game){
+      console.log("Join game " + game.gameId);
+      $.ajax({
+        type: 'POST',
+        url: apiUrl + '/api/games/' + game.gameId + '/join'
+      }).done(function(data){
+        console.log("Game joined " + data);
+        var allGames = openGames.get('items').slice(0),
+          index = allGames.indexOf(game);
+
+        allGames.splice(index, 1);
+
+        openGames.set('items', allGames);
+
+        loadOwn();
+        gamePage(data).open();
       });
     };
 
