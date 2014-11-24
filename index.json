@@ -19,6 +19,9 @@
     },
     {
         "src": "js/game.js"
+    },
+    {
+        "src": "js/board.js"
     }
   ]
 }

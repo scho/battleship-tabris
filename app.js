@@ -4,6 +4,7 @@ tabris.load(function(){
   var lobbyPage = new LobbyPage({
     onOpenGame: function (gameId) {
       var gamePage = new GamePage({
+        gameId: gameId,
         apiUrl: apiUrl
       });
       gamePage.build();
