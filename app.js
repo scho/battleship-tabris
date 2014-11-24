@@ -150,6 +150,14 @@ tabris.load(function(){
             });
           }
         }).on("selection", function(event) {
+          console.log("Join game " + event.item.gameId);
+          $.ajax({
+            type: 'POST',
+            url: apiUrl + '/api/games/' + event.item.gameId + '/join'
+          }).done(function(gameId){
+            console.log("Game joined " + gameId);
+            gamePage(gameId).open();
+          });
         }).appendTo(openGamesTab);
         console.log(games.length + " open games loaded.");
       }).fail(function(){
