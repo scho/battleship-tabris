@@ -1,6 +1,6 @@
 {
   "title": "Battelship",
-  "description": "iOS client for battelship",
+  "description": "Client for battelship",
   "resources": [
     {
         "src": "http://download.eclipsesource.com/technology/tabris/js/current/tabris.min.js"
