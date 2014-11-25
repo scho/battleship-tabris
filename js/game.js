@@ -46,6 +46,33 @@ GamePage.prototype.build = function(){
     font: "14px"
   }).appendTo(self.opponentTab);
 
+  self.nobodyHasJoinedLabel = tabris.create("Label", {
+    layoutData: {top: 8, left: [20, 0], right: [20, 0]},
+    text: "<i>Nobody has joined yet...</i>",
+    visibility: false,
+    alignment: "center",
+    markupEnabled: true,
+    font: "14px"
+  }).appendTo(self.opponentTab);
+
+  self.wonLabel = tabris.create("Label", {
+    layoutData: {top: 8, left: [20, 0], right: [20, 0]},
+    text: "<b>You won</b> :)",
+    visibility: false,
+    alignment: "center",
+    markupEnabled: true,
+    font: "14px"
+  }).appendTo(self.opponentTab);
+
+  self.lostLabel = tabris.create("Label", {
+    layoutData: {top: 8, left: [20, 0], right: [20, 0]},
+    text: "<b>You lost</b> :(",
+    visibility: false,
+    alignment: "center",
+    markupEnabled: true,
+    font: "14px"
+  }).appendTo(self.opponentTab);
+
   self.opponentCanvas = tabris.create("Canvas", {
     layoutData: {left: 10, top: 25, right: 10, bottom: 10}
   }).appendTo(self.opponentTab);
@@ -138,38 +165,37 @@ GamePage.prototype.updateGameState = function(){
     //$('.players-name').text(gameState.playersName);
     if(gameState.started){
       //$('.opponents-name').text(gameState.opponentsName);
-      //$('#nobody-has-joined').hide();
+      self.nobodyHasJoinedLabel.set('visibility', false);
     } else {
       //$('.opponents-name').text('?');
-      //$('#nobody-has-joined').show();
+      self.nobodyHasJoinedLabel.set('visibility', true);
     }
 
     if(gameState.finished){
-      //$('#not-your-turn').hide();
-      //$('#your-turn').hide();
+      self.shootAtButton.set('visibility', false);
+      self.waitingLabel.set('visibility', false);
       if(gameState.won){
-        //$('#won').show();
+        self.wonLabel.set('visibility', true);
       } else {
-        //$('#lost').show();
+        self.lostLabel.set('visibility', true);
       }
 
       return;
     }
 
     if(gameState.playersTurn && gameState.started){
-      //$('#your-turn').fadeIn();
-      //$('#not-your-turn').fadeOut();
       self.shootAtButton.set('visibility', true);
       self.shootAtButton.set('enabled', !!self.opponentBoard.getSelectedPosition());
       self.waitingLabel.set('visibility', false);
       self.loadPlayersBoardPositions();
     } else {
       self.shootAtButton.set('visibility', false);
-      self.waitingLabel.set('visibility', true);
+      if(gameState.started){
+        self.waitingLabel.set('visibility', true);
+      }
       setTimeout(function(){
         self.updateGameState();
       }, 1000);
     }
-    //$('#headline').show();
   });
 };
