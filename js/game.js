@@ -32,8 +32,7 @@ GamePage.prototype.build = function(){
   }).on("selection", function(){
     var position = self.opponentBoard.getSelectedPosition();
 
-    self.shootAtButton.set('visibility', false);
-    self.waitingLabel.set('visibility', true);
+    self.shootAtButton.set('enabled', false);
     self.shootAt(position[0], position[1]);
   }).appendTo(self.opponentTab);
 
@@ -147,8 +146,9 @@ GamePage.prototype.shootAt = function(x, y){
     type: 'POST',
     url: self.apiUrl + '/api/games/' + self.gameId + '/shootat/' + x + '-' + y
   }).done(function(){
-    self.updateGameState();
     self.loadOpponentsBoardPositions();
+    self.updateGameState();
+    
     //window.loadMessages();
   }).fail(function(){
     console.log('shooting failed');
