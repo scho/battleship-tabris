@@ -57,20 +57,20 @@ GamePage.prototype.build = function(){
 
   self.wonLabel = tabris.create("Label", {
     layoutData: {top: 8, left: [20, 0], right: [20, 0]},
-    text: "<b>You won</b> :)",
+    text: "<b>You won :)</b>",
     visibility: false,
     alignment: "center",
     markupEnabled: true,
-    font: "14px"
+    font: "16px"
   }).appendTo(self.opponentTab);
 
   self.lostLabel = tabris.create("Label", {
     layoutData: {top: 8, left: [20, 0], right: [20, 0]},
-    text: "<b>You lost</b> :(",
+    text: "<b>You lost :(</b>",
     visibility: false,
     alignment: "center",
     markupEnabled: true,
-    font: "14px"
+    font: "16px"
   }).appendTo(self.opponentTab);
 
   self.opponentCanvas = tabris.create("Canvas", {
