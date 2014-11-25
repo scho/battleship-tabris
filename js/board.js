@@ -6,25 +6,29 @@ var Board = function (config) {
   }
   self.startX = 0;
   self.startY = 0;
+  self.unknownPositions = [];
 
   var touchChange = function(event){
+    if(!self.clickable){
+      return;
+    }
+
     var newHighlightX = Math.floor((event.touches[0].x - self.startX) / self.tileSize),
       newHighlightY = Math.floor((event.touches[0].y - self.startY) / self.tileSize);
 
-    if(newHighlightX !== self.highlightX || newHighlightY !== self.highlightY){
+    if(newHighlightX >= 0 && newHighlightY >= 0 &&  self.unknownPositions[newHighlightY][newHighlightX] && (newHighlightX !== self.highlightX || newHighlightY !== self.highlightY)){
       self.highlightX = newHighlightX;
       self.highlightY = newHighlightY;
       self.draw();
+      self.onSelectionChange();
     }
   };
 
-  self.canvas.on('touchmove', function(event){
-    touchChange(event);
-  });
+  self.canvas.on('touchmove', touchChange);
 
-  self.canvas.on('touchend', function(event){
-    touchChange(event);
-  });
+  self.canvas.on('touchend', touchChange);
+
+  self.canvas.on('touchstart', touchChange);
 
   self.canvas.on("change:bounds", function(){
     self.onBoundsChange();
@@ -46,6 +50,13 @@ Board.prototype.onBoundsChange = function() {
   self.draw();
 };
 
+Board.prototype.setDataAndDraw = function (data) {
+  var self = this;
+
+  self.data = data;
+  self.draw();
+};
+
 Board.prototype.draw = function () {
 
   var self = this,
@@ -63,6 +74,7 @@ Board.prototype.draw = function () {
 
   self.data.map(function(row){
     x = 0;
+    self.unknownPositions[y] = [];
     row.map(function(cell){
       var kind = cell.kind.toLocaleLowerCase().replace('_', '-'),
         unknown = kind === 'unknown',
@@ -70,15 +82,10 @@ Board.prototype.draw = function () {
         style = self.getPositionStyle(kind, x === self.highlightX && y === self.highlightY);
 
       ctx.fillStyle = style;
-
       ctx.fillRect(self.startX + x * (tileSize + 1), self.startY + y * (tileSize + 1), tileSize, tileSize);
 
-      if(self.clickable && unknown){
-        //ctx.fillRect(self.startX + x * (tileSize + 1), self.startY + y * (tileSize + 1), tileSize, tileSize);
-          //rowEl.append('<td title="' + title + '" onClick="(function(e){ e.preventDefault(); shootAt(' + x + ',' + y + ')})(event)" class="clickable ' + kind + '"></td>');
-      } else {
-        //ctx.fillRect(self.startX + x * (tileSize + 1), self.startY + y * (tileSize + 1), tileSize, tileSize);
-      }
+      self.unknownPositions[y][x] = unknown;
+
       x += 1;
     });
     y += 1;
@@ -100,4 +107,17 @@ Board.prototype.getPositionStyle = function(kind, highlight){
     case "unknown":
       return highlight ? "rgb(153,153,153)" : "rgb(244,244,244)";
   }
+};
+
+Board.prototype.onSelectionChange = function(){
+};
+
+Board.prototype.getSelectedPosition = function(){
+  var self = this;
+
+  if(self.highlightX >= 0 && self.highlightY >= 0 && self.unknownPositions[self.highlightY][self.highlightX]){
+    return [self.highlightX, self.highlightY];
+  }
+
+  
 };

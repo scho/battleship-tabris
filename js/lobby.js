@@ -56,7 +56,7 @@ LobbyPage.prototype.build = function() {
       });
     }
   }).on("selection", function(event) {      
-    self.join(event.item);
+    self.joinGame(event.item);
   }).appendTo(self.openGamesTab);
 
   self.ownGamesCollectionView = tabris.create("CollectionView", {
