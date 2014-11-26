@@ -1,4 +1,4 @@
-Battleship for iOS
-==================
+Mobile Tabris.js client for Battleship
+======================================
 
-iOS client for [battleship](https://github.com/scho/battleship).
+Mobile Tabris.js client for [battleship](https://github.com/scho/battleship).
