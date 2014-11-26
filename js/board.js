@@ -108,7 +108,7 @@ Board.prototype.getPositionStyle = function(kind, highlight){
     case "ship-sunk":
       return "#B30023";
     case "water-hit":
-      return "#B30023";
+      return "#AEDCFF";
     case "unknown":
       return highlight ? "#999999" : "#F4F4F4";
   }
