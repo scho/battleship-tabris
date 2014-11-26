@@ -16,7 +16,12 @@ var Board = function (config) {
     var newHighlightX = Math.floor((event.touches[0].x - self.startX) / self.tileSize),
       newHighlightY = Math.floor((event.touches[0].y - self.startY) / self.tileSize);
 
-    if(newHighlightX >= 0 && newHighlightY >= 0 &&  self.unknownPositions[newHighlightY][newHighlightX] && (newHighlightX !== self.highlightX || newHighlightY !== self.highlightY)){
+    if(newHighlightX >= 0 && 
+      newHighlightY >= 0 && 
+      newHighlightX < 10 && 
+      newHighlightY < 10 && 
+      self.unknownPositions[newHighlightY][newHighlightX] && 
+      (newHighlightX !== self.highlightX || newHighlightY !== self.highlightY)){
       self.highlightX = newHighlightX;
       self.highlightY = newHighlightY;
       self.draw();
