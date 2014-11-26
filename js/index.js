@@ -62,7 +62,7 @@ IndexPage.prototype.login = function(){
     localStorage.setItem('playerName', name);
     self.onLogin();
   }).fail(function(j){
-    failure("Login failed.");
+    console.log("Login failed.");
   });
 };
 
@@ -84,7 +84,7 @@ IndexPage.prototype.register = function(){
     self.onRegister();
   }).fail(function(responseText){
     self.statusLabel.set("text", responseText);
-    failure("Register failed.");
+    console.log("Register failed.");
   });
 };
 
