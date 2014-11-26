@@ -110,7 +110,7 @@ Board.prototype.getPositionStyle = function(kind, highlight){
     case "water-hit":
       return "#B30023";
     case "unknown":
-      return highlight ? "#F4F4F4" : "#999999";
+      return highlight ? "#999999" : "#F4F4F4";
   }
 };
 
