@@ -177,9 +177,9 @@ GamePage.prototype.updateGameState = function(){
       if(gameState.won){
         self.wonLabel.set('visibility', true);
       } else {
+        self.loadOpponentsBoardPositions();
         self.lostLabel.set('visibility', true);
       }
-
       return;
     }
 
