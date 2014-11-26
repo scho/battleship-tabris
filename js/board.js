@@ -100,17 +100,17 @@ Board.prototype.draw = function () {
 Board.prototype.getPositionStyle = function(kind, highlight){
   switch(kind){
     case "water":
-      return "rgb(235,244,250)";
+      return "#EBF4FA";
     case "ship":
-      return "rgb(108,123,139)";
+      return "#6C7B8B";
     case "ship-hit":
-      return "rgb(255,109,149)";
+      return "#FF6D95";
     case "ship-sunk":
-      return "rgb(179,0,35)";
+      return "#B30023";
     case "water-hit":
-      return "rgb(174,220,255)";
+      return "#B30023";
     case "unknown":
-      return highlight ? "rgb(153,153,153)" : "rgb(244,244,244)";
+      return highlight ? "#F4F4F4" : "#999999";
   }
 };
 

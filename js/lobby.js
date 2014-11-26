@@ -11,7 +11,8 @@ LobbyPage.prototype.build = function() {
   
   self.page = tabris.create("Page", {
     title: "Battleship - Lobby",
-    topLevel: false
+    topLevel: false,
+    background: "#FFFFFF"
   });
 
   self.openGameButton = tabris.create("Button", {

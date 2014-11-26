@@ -11,7 +11,8 @@ GamePage.prototype.build = function(){
 
   self.page = tabris.create("Page", {
     title: "Game",
-    topLevel: false
+    topLevel: false,
+    background: "#FFFFFF"
   });
 
   self.tabFolder = tabris.create("TabFolder", {

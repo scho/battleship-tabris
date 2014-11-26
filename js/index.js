@@ -11,7 +11,8 @@ IndexPage.prototype.build = function () {
 
   self.page = tabris.create("Page", {
     title: "Battleship - Login",
-    topLevel: true
+    topLevel: true,
+    background: "#FFFFFF"
   });
 
   self.statusLabel = tabris.create("Label", {
